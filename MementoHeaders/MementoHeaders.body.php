@@ -49,7 +49,10 @@ class MementoHeaders {
 	 */
 	public function onArticleViewHeader( &$article, &$outputDone, &$pcache) {
 
-		global $wgTimegateURLPrefix;
+		global $wgMementoTimeGateURLPrefix;
+		global $wgServer;
+		global $wgScriptPath;
+		global $wgEnableAPI;
 
 		// avoid processing Mementos for nonexistent pages
 		// if we're an article, do memento processing, otherwise don't worry
@@ -74,8 +77,17 @@ class MementoHeaders {
 					$originalURI = $title->getFullURL();
 
 					$linkRelations = array();
-					$tgURI = $wgTimegateURLPrefix . $originalURI;
-					$linkRelations[] = "<$tgURI>; rel=\"timegate\"";
+
+					if ( $wgEnableAPI === true ) {
+
+						# TODO: find a cleaner way, if possible, than concatenation
+						$tgURI = $wgMementoTimeGateURLPrefix . $originalURI;
+						$linkRelations[] = "<$tgURI>; rel=\"timegate\"";
+
+						# TODO: find a cleaner way, if possible, than concatenation
+						$apiURI = $wgServer . $wgScriptPath . '/api.php';
+						$linkRelations[] = "<$apiURI>; rel=\"api\"";
+					}
 	
 					if ( $oldID != 0 ) {
 						$mementoTimestamp = 

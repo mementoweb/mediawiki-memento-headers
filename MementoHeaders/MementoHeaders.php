@@ -49,7 +49,7 @@ $wgExtensionCredits['other'][] = array(
 
 $wgAutoloadClasses['MementoHeaders'] = __DIR__ . '/MementoHeaders.body.php';
 
-$wgTimegateURLPrefix = "http://mementoweb.org/wiki/timegate/";
+$wgMementoTimeGateURLPrefix = "http://mementoweb.org/wiki/timegate/";
 
 $wgMementoHeaders = new MementoHeaders();
 
