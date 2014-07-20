@@ -18,7 +18,7 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * http://www.gnu.org/copyleft/gpl.html
- * 
+ *
  * @file
  */
 
@@ -47,7 +47,7 @@ class MementoHeaders {
 	 *
 	 * @return boolean true
 	 */
-	public function onArticleViewHeader( &$article, &$outputDone, &$pcache) {
+	public function onArticleViewHeader( &$article, &$outputDone, &$pcache ) {
 
 		global $wgMementoTimeGateURLPrefix;
 		global $wgEnableAPI;
@@ -56,15 +56,15 @@ class MementoHeaders {
 		// if we're an article, do memento processing, otherwise don't worry
 		// if we're a diff or edit page, Memento doesn't make sense
 		if ( $article->getTitle()->isKnown() ) {
-	
+
 				$revision = $article->getRevisionFetched();
-	
+
 				// avoid processing Mementos for bad revisions,
 				// let MediaWiki handle that case instead
 				if ( is_object( $revision ) ) {
-	
+
 					$oldID = $article->getOldID();
-	
+
 					$out = $article->getContext()->getOutput();
 					$request = $out->getRequest();
 					$response = $request->response();
@@ -76,7 +76,7 @@ class MementoHeaders {
 
 					if ( $wgEnableAPI === true ) {
 
-						$apiURI = wfExpandUrl( wfScript('api') );
+						$apiURI = wfExpandUrl( wfScript( 'api' ) );
 						$apiRelation = "http://mementoweb.org/terms/api/mediawiki/";
 						$linkRelations[] = "<$apiURI>; rel=\"$apiRelation\"";
 
@@ -85,34 +85,34 @@ class MementoHeaders {
 						$linkRelations[] = "<$tgURI>; rel=\"timegate\"";
 
 					}
-	
+
 					if ( $oldID != 0 ) {
-						$mementoTimestamp = 
+						$mementoTimestamp =
 							$article->getRevisionFetched()->getTimestamp();
-	
+
 						$mementoDatetime = wfTimestamp( TS_RFC2822, $mementoTimestamp );
 						$response->header( "Memento-Datetime:  $mementoDatetime", true );
 
 						$firstRevision = $title->getFirstRevision();
-						$firstdt = wfTimestamp( TS_RFC2822, $firstRevision->getTimestamp());
+						$firstdt = wfTimestamp( TS_RFC2822, $firstRevision->getTimestamp() );
 						$firsturi = $title->getFullURL( array( "oldid" => $firstRevision->getId() ) );
 
 						$lastRevision = Revision::newFromTitle( $title );
-						$lastdt = wfTimestamp( TS_RFC2822, $lastRevision->getTimestamp());
+						$lastdt = wfTimestamp( TS_RFC2822, $lastRevision->getTimestamp() );
 						$lasturi = $title->getFullURL( array( "oldid" => $lastRevision->getId() ) );
 
 						$prevuri = $title->getFullURL( array( "oldid" => $title->getPreviousRevisionID() ) );
 						$nexturi = $title->getFullURL( array( "oldid" => $title->getNextRevisionID() ) );
 
 						$linkRelations[] = "<$originalURI>; rel=\"original\"";
-						$linkRelations[] = "<$firsturi>; rel=\"first memento\"; datetime=\"$firstdt\""; 
+						$linkRelations[] = "<$firsturi>; rel=\"first memento\"; datetime=\"$firstdt\"";
 						$linkRelations[] = "<$lasturi>; rel=\"last memento\"; datetime=\"$lastdt\"";
 						$linkRelations[] = "<$prevuri>; rel=\"prev\"";
 						$linkRelations[] = "<$nexturi>; rel=\"next\"";
-	
+
 					}
 
-					$linkValue = implode(', ', $linkRelations);
+					$linkValue = implode( ', ', $linkRelations );
 					$response->header( "Link: $linkValue", true );
 				}
 		}
