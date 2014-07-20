@@ -1,7 +1,7 @@
 <?php
 /**
- * This file is part of the Memento Extension to MediaWiki
- * http://www.mediawiki.org/wiki/Extension:Memento
+ * This file is part of the Memento Headers Extension to MediaWiki
+ * http://www.mediawiki.org/wiki/Extension:MementoHeaders
  *
  * @section LICENSE
  * This program is free software; you can redistribute it and/or modify
@@ -74,18 +74,45 @@ class MementoHeaders {
 
 					$linkRelations = array();
 
-					// only provide TimeGate information if the Wiki has the
-					// API enabled, otherwise we tell the Memento client about
-					// a TimeGate that can't actual perform datetime negotiation
+					/* only provide TimeGate information if the Wiki has the
+					 * API enabled, otherwise we tell the Memento client about
+					 * a TimeGate that can't actual perform datetime negotiation
+					 */
 					if ( $wgEnableAPI === true ) {
 
 						$apiURI = wfExpandUrl( wfScript( 'api' ) );
 						$apiRelation = "http://mementoweb.org/terms/api/mediawiki/";
 						$linkRelations[] = "<$apiURI>; rel=\"$apiRelation\"";
 
-						// TODO: find a cleaner way, if possible, than concatenation
-						$tgURI = $wgMementoTimeGateURLPrefix . $originalURI;
-						$linkRelations[] = "<$tgURI>; rel=\"timegate\"";
+						/* TODO: find a cleaner way, if possible, than 
+						 * concatenation to produce the TimeGate URI
+						 *
+						 * Concern: HTML Injection
+						 * @see http://www.owasp.org/index.php/HTML_Injection
+						 * 
+						 * Analysis:
+						 * The input for $wgMementoTimeGateURLPrefix can come
+						 * from the LocalSettings.php file and the input for
+						 * $originalURI comes from the $title->getFullURIL()
+						 * function call above. This limits the attack vector
+						 * to the LocalSettings.php file, as it is the only
+						 * place where one of these two variables can be altered
+						 * to produce a malicious result.
+						 *
+						 * This result is also used as an entry to the Link
+						 * header and not as input to HTML, so there is no 
+						 * possibility of HTML injection.  The worst-case
+						 * scenario is that the admin injects a bad URI
+						 * into the LocalSettings.php file for a Memento client
+						 * to follow.
+						 *
+						 * For some level of input validation, in case of typing
+						 * mistakes, we use filter_var.
+						 */
+						if ( filter_var( $wgMementoTimeGateURLPrefix, FILTER_VALIDATE_URL ) ) {
+							$tgURI = $wgMementoTimeGateURLPrefix . $originalURI;
+							$linkRelations[] = "<$tgURI>; rel=\"timegate\"";
+						}
 
 					}
 

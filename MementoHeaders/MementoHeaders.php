@@ -1,7 +1,7 @@
 <?php
 /**
- * This file is part of the Memento Extension to MediaWiki
- * http://www.mediawiki.org/wiki/Extension:Memento
+ * This file is part of the Memento Headers Extension to MediaWiki
+ * http://www.mediawiki.org/wiki/Extension:MementoHeaders
  *
  * @section LICENSE
  * This program is free software; you can redistribute it and/or modify
@@ -30,27 +30,27 @@ if ( ! defined( 'MEDIAWIKI' ) ) {
 	exit( 1 );
 }
 
-$wgExtensionMessagesFiles['MementoHeaders'] = __DIR__ . '/MementoHeaders.i18n.php';
-
 // Set up the extension
 $wgExtensionCredits['other'][] = array(
 	'path' => __FILE__,
 	'name' => 'Memento Headers',
-	'description' => 'extension-overview',
+	'descriptionmsg' => 'mementoheaders-desc',
 	'url' => 'https://www.mediawiki.org/wiki/Extension:MementoHeaders',
-	'author' => array(
-		'Harihar Shankar',
-		'Herbert Van de Sompel',
-		'Robert Sanderson',
-		'Shawn M. Jones'
-	),
+	'author' => '[http://www.mediawiki.org/wiki/User:Shawnmjones Shawn M. Jones]',
 	'version' => '0.1-SNAPSHOT'
 );
 
+// set up the messages file
+$wgMessagesDirs['MementoHeaders'] = __DIR__ . '/i18n';
+$wgExtensionMessagesFiles['MementoHeaders'] = __DIR__ . '/MementoHeaders.i18n.php';
+
+// set up the core class
 $wgAutoloadClasses['MementoHeaders'] = __DIR__ . '/MementoHeaders.body.php';
 
+// set defaults for setting
 $wgMementoTimeGateURLPrefix = "http://mementoweb.org/wiki/timegate/";
 
+// instantiate entry point
 $wgMementoHeaders = new MementoHeaders();
 
 // Set up the hooks for this class
