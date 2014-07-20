@@ -55,4 +55,3 @@ $wgMementoHeaders = new MementoHeaders();
 
 // Set up the hooks for this class
 $wgHooks['ArticleViewHeader'][] = $wgMementoHeaders;
-

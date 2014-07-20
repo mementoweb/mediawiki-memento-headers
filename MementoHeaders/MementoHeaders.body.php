@@ -50,8 +50,6 @@ class MementoHeaders {
 	public function onArticleViewHeader( &$article, &$outputDone, &$pcache) {
 
 		global $wgMementoTimeGateURLPrefix;
-		global $wgServer;
-		global $wgScriptPath;
 		global $wgEnableAPI;
 
 		// avoid processing Mementos for nonexistent pages
@@ -72,21 +70,20 @@ class MementoHeaders {
 					$response = $request->response();
 					$title = $article->getTitle();
 
-					$response->header( "X-Debug-1: " + date('Y/m/d H:i:s'), true );
-
 					$originalURI = $title->getFullURL();
 
 					$linkRelations = array();
 
 					if ( $wgEnableAPI === true ) {
 
-						# TODO: find a cleaner way, if possible, than concatenation
+						$apiURI = wfExpandUrl( wfScript('api') );
+						$apiRelation = "http://mementoweb.org/terms/api/mediawiki/";
+						$linkRelations[] = "<$apiURI>; rel=\"$apiRelation\"";
+
+						# TODO: find a cleaner way, if possible, than concatenation (wfExpandUrl)
 						$tgURI = $wgMementoTimeGateURLPrefix . $originalURI;
 						$linkRelations[] = "<$tgURI>; rel=\"timegate\"";
 
-						# TODO: find a cleaner way, if possible, than concatenation
-						$apiURI = $wgServer . $wgScriptPath . '/api.php';
-						$linkRelations[] = "<$apiURI>; rel=\"api\"";
 					}
 	
 					if ( $oldID != 0 ) {
