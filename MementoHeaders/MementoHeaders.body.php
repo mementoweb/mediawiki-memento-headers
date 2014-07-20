@@ -105,8 +105,8 @@ class MementoHeaders {
 						$nexturi = $title->getFullURL( array( "oldid" => $title->getNextRevisionID() ) );
 
 						$linkRelations[] = "<$originalURI>; rel=\"original\"";
-						$linkRelations[] = "<$firsturi>; rel=\"first memento\"; datetime=\"$firstdt\"";; 
-						$linkRelations[] = "<$lasturi>; rel=\"last memento\"; datetime=\"$lastdt\"";; 
+						$linkRelations[] = "<$firsturi>; rel=\"first memento\"; datetime=\"$firstdt\""; 
+						$linkRelations[] = "<$lasturi>; rel=\"last memento\"; datetime=\"$lastdt\"";
 						$linkRelations[] = "<$prevuri>; rel=\"prev\"";
 						$linkRelations[] = "<$nexturi>; rel=\"next\"";
 	
