@@ -74,13 +74,16 @@ class MementoHeaders {
 
 					$linkRelations = array();
 
+					// only provide TimeGate information if the Wiki has the
+					// API enabled, otherwise we tell the Memento client about
+					// a TimeGate that can't actual perform datetime negotiation
 					if ( $wgEnableAPI === true ) {
 
 						$apiURI = wfExpandUrl( wfScript( 'api' ) );
 						$apiRelation = "http://mementoweb.org/terms/api/mediawiki/";
 						$linkRelations[] = "<$apiURI>; rel=\"$apiRelation\"";
 
-						# TODO: find a cleaner way, if possible, than concatenation (wfExpandUrl)
+						// TODO: find a cleaner way, if possible, than concatenation
 						$tgURI = $wgMementoTimeGateURLPrefix . $originalURI;
 						$linkRelations[] = "<$tgURI>; rel=\"timegate\"";
 
