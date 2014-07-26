@@ -117,22 +117,61 @@ class MementoHeaders {
 					}
 
 					if ( $oldID != 0 ) {
-						$mementoTimestamp =
-							$article->getRevisionFetched()->getTimestamp();
 
-						$mementoDatetime = wfTimestamp( TS_RFC2822, $mementoTimestamp );
-						$response->header( "Memento-Datetime:  $mementoDatetime", true );
+						$thisRevision = $article->getRevisionFetched();
+
+						/* 
+						 * I'm not sure when this would occur, seeing as
+						 * we're wrapped in several if statements to
+						 * prevent a bad title object from being loaded, 
+						 * but just in case...
+						 */
+						if ( $thisRevision == null ) {
+							throw new ErrorPageError( 'mementoheaders', 'bad-current-revision', array() );
+						}
 
 						$firstRevision = $title->getFirstRevision();
-						$firstdt = wfTimestamp( TS_RFC2822, $firstRevision->getTimestamp() );
-						$firsturi = $title->getFullURL( array( "oldid" => $firstRevision->getId() ) );
-
 						$lastRevision = Revision::newFromTitle( $title );
-						$lastdt = wfTimestamp( TS_RFC2822, $lastRevision->getTimestamp() );
-						$lasturi = $title->getFullURL( array( "oldid" => $lastRevision->getId() ) );
+						$prevRevID = $title->getPreviousRevisionID( $oldID );
+						$nextRevID = $title->getNextRevisionID( $oldID );
 
-						$prevuri = $title->getFullURL( array( "oldid" => $title->getPreviousRevisionID( $oldID ) ) );
-						$nexturi = $title->getFullURL( array( "oldid" => $title->getNextRevisionID( $oldID ) ) );
+						// again, just in case..
+						if ( $prevRevID == null ) {
+							throw new ErrorPageError( 'mementoheaders', 'bad-prev-id', array() );
+						}
+
+						if ( $nextRevID == null ) {
+							throw new ErrorPageError( 'mementoheaders', 'bad-next-id', array() );
+						}
+
+						if ( $firstRevision == null ) {
+							throw new ErrorPageError( 'mementoheaders', 'bad-first-rev', array() );
+						}
+
+						if ( $lastRevision == null ) {
+							throw new ErrorPageError( 'mementoheaders', 'bad-last-rev', array() );
+						}
+
+						$lastID = $lastRevision->getID();
+						$firstID = $firstRevision->getID();
+
+						// and again, just in case..
+						if ( $firstID == null ) {
+							throw new ErrorPageError( 'mementoheaders', 'bad-first-id', array() );
+						}
+
+						if ( $lastID == null ) {
+							throw new ErrorPageError( 'mementoheaders', 'bad-last-id', array() );
+						}
+
+						$lastdt = wfTimestamp( TS_RFC2822, $lastRevision->getTimestamp() );
+						$lasturi = $title->getFullURL( array( "oldid" => $lastID ) );
+
+						$firstdt = wfTimestamp( TS_RFC2822, $firstRevision->getTimestamp() );
+						$firsturi = $title->getFullURL( array( "oldid" => $firstID ) );
+
+						$prevuri = $title->getFullURL( array( "oldid" => $prevRevID ) );
+						$nexturi = $title->getFullURL( array( "oldid" => $nextRevID ) );
 
 						$linkRelations[] = "<$originalURI>; rel=\"original\"";
 						$linkRelations[] = "<$firsturi>; rel=\"first memento\"; datetime=\"$firstdt\"";
@@ -140,6 +179,9 @@ class MementoHeaders {
 						$linkRelations[] = "<$prevuri>; rel=\"prev\"";
 						$linkRelations[] = "<$nexturi>; rel=\"next\"";
 
+						$mementoTimestamp = $thisRevision->getTimestamp();
+						$mementoDatetime = wfTimestamp( TS_RFC2822, $mementoTimestamp );
+						$response->header( "Memento-Datetime:  $mementoDatetime", true );
 					}
 
 					$linkValue = implode( ', ', $linkRelations );
