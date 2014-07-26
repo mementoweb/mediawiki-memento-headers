@@ -131,8 +131,8 @@ class MementoHeaders {
 						$lastdt = wfTimestamp( TS_RFC2822, $lastRevision->getTimestamp() );
 						$lasturi = $title->getFullURL( array( "oldid" => $lastRevision->getId() ) );
 
-						$prevuri = $title->getFullURL( array( "oldid" => $title->getPreviousRevisionID() ) );
-						$nexturi = $title->getFullURL( array( "oldid" => $title->getNextRevisionID() ) );
+						$prevuri = $title->getFullURL( array( "oldid" => $title->getPreviousRevisionID( $oldID ) ) );
+						$nexturi = $title->getFullURL( array( "oldid" => $title->getNextRevisionID( $oldID ) ) );
 
 						$linkRelations[] = "<$originalURI>; rel=\"original\"";
 						$linkRelations[] = "<$firsturi>; rel=\"first memento\"; datetime=\"$firstdt\"";
