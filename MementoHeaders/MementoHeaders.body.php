@@ -50,7 +50,13 @@ class MementoHeaders {
 	public function onArticleViewHeader( &$article, &$outputDone, &$pcache ) {
 
 		global $wgMementoTimeGateURLPrefix;
+		global $wgMementoExcludeNamespaces;
 		global $wgEnableAPI;
+
+		// if we're in the list of excluded namespaces, bail out and do nothing
+		if (  in_array( $article->getTitle()->getNamespace(), $wgMementoExcludeNamespaces ) ) {
+			return true;
+		}
 
 		// avoid processing Mementos for nonexistent pages
 		// if we're an article, do memento processing, otherwise don't worry
