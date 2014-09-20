@@ -1,6 +1,4 @@
 {
 	"mementoheaders" : "Memento Headers",
-	"mementoheaders-desc" : "The Memento Headers extension provides the just the HTTP headers for Memento clients, allowing Memento users to browse old versions of web pages as if it were the past date that the user choses.  Please visit http://mementoweb.org for more information.",
-	"bad-title" : "The title object for this page did not load correctly, please check your MediaWiki installation.",
-	"bad-current-revision" : "The revision given for this page did not load correctly."
+	"mementoheaders-desc" : "The Memento Headers extension provides the just the HTTP headers for Memento clients, allowing Memento users to browse old versions of web pages as if it were the past date that the user choses.  This extension adds that capability to MediaWiki so users can seemlessly transition from web archives to wikis.  Please visit http://mementoweb.org for more information."
 }
