@@ -50,11 +50,11 @@ class MementoHeaders {
 	public function onArticleViewHeader( &$article, &$outputDone, &$pcache ) {
 
 		global $wgMementoTimeGateURLPrefix;
-		global $wgMementoExcludeNamespaces;
+		global $wgMementoIncludeNamespaces;
 		global $wgEnableAPI;
 
 		// if we're in the list of excluded namespaces, bail out and do nothing
-		if (  in_array( $article->getTitle()->getNamespace(), $wgMementoExcludeNamespaces ) ) {
+		if ( ! in_array( $article->getTitle()->getNamespace(), $wgMementoIncludeNamespaces ) ) {
 			return true;
 		}
 
