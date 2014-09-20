@@ -124,6 +124,8 @@ class MementoHeaders {
 
 					if ( $oldID != 0 ) {
 
+						$linkRelations[] = "<$originalURI>; rel=\"original\"";
+
 						$thisRevision = $article->getRevisionFetched();
 
 						/* 
@@ -138,52 +140,67 @@ class MementoHeaders {
 
 						$firstRevision = $title->getFirstRevision();
 						$lastRevision = Revision::newFromTitle( $title );
+
+						/* 
+						 * I'm not sure when this would occur, seeing as
+						 * we're wrapped in several if statements to
+						 * prevent a bad title object from being loaded, 
+						 * but just in case...
+						 */
+						if ( $firstRevison != null ) {
+							$firstID = $firstRevision->getID();
+							
+							/* don't bother making headers if firstID is null;
+							 * something is wrong in that case, but we didn't cause it
+							 * so no need to put our extension's name on the error page
+							 */
+							if ( $firstID != null ) {
+								$firstdt = wfTimestamp( TS_RFC2822, $firstRevision->getTimestamp() );
+							
+								if ( $firstdt != false ) {
+									$firsturi = $title->getFullURL( array( "oldid" => $firstID ) );
+									$linkRelations[] = "<$firsturi>; rel=\"first memento\"; datetime=\"$firstdt\"";
+								}
+							}
+						}
+
+						if ( $lastRevision != null ) {
+							$lastID = $lastRevision->getID();
+						
+							/* don't bother making headers if lastID is null
+							 * something is wrong in that case, but we didn't cause it
+							 * so no need to put our extension's name on the error page
+							*/
+							if ( $lastID != null ) {
+								$lastdt = wfTimestamp( TS_RFC2822, $lastRevision->getTimestamp() );
+						
+								if ( $lastdt != false ) {
+									$lasturi = $title->getFullURL( array( "oldid" => $lastID ) );
+									$linkRelations[] = "<$lasturi>; rel=\"last memento\"; datetime=\"$lastdt\"";
+		        				}
+						    }
+						}
+
 						$prevRevID = $title->getPreviousRevisionID( $oldID );
 						$nextRevID = $title->getNextRevisionID( $oldID );
 
-						// again, just in case..
-						if ( $prevRevID == null ) {
-							throw new ErrorPageError( 'mementoheaders', 'bad-prev-id', array() );
+						/*
+						 * $prevRevID == null when we are on the first revision,
+						 * because there is no previous one
+						 */
+						if ( $prevRevID != null ) {
+							$prevuri = $title->getFullURL( array( "oldid" => $prevRevID ) );
+							$linkRelations[] = "<$prevuri>; rel=\"prev\"";
 						}
 
-						if ( $nextRevID == null ) {
-							throw new ErrorPageError( 'mementoheaders', 'bad-next-id', array() );
+						/*
+						 * $nextRevID == null when we are on the last revision,
+						 * because there is no next one
+						 */
+						if ( $nextRevID != null ) {
+							$nexturi = $title->getFullURL( array( "oldid" => $nextRevID ) );
+							$linkRelations[] = "<$nexturi>; rel=\"next\"";
 						}
-
-						if ( $firstRevision == null ) {
-							throw new ErrorPageError( 'mementoheaders', 'bad-first-rev', array() );
-						}
-
-						if ( $lastRevision == null ) {
-							throw new ErrorPageError( 'mementoheaders', 'bad-last-rev', array() );
-						}
-
-						$lastID = $lastRevision->getID();
-						$firstID = $firstRevision->getID();
-
-						// and again, just in case..
-						if ( $firstID == null ) {
-							throw new ErrorPageError( 'mementoheaders', 'bad-first-id', array() );
-						}
-
-						if ( $lastID == null ) {
-							throw new ErrorPageError( 'mementoheaders', 'bad-last-id', array() );
-						}
-
-						$lastdt = wfTimestamp( TS_RFC2822, $lastRevision->getTimestamp() );
-						$lasturi = $title->getFullURL( array( "oldid" => $lastID ) );
-
-						$firstdt = wfTimestamp( TS_RFC2822, $firstRevision->getTimestamp() );
-						$firsturi = $title->getFullURL( array( "oldid" => $firstID ) );
-
-						$prevuri = $title->getFullURL( array( "oldid" => $prevRevID ) );
-						$nexturi = $title->getFullURL( array( "oldid" => $nextRevID ) );
-
-						$linkRelations[] = "<$originalURI>; rel=\"original\"";
-						$linkRelations[] = "<$firsturi>; rel=\"first memento\"; datetime=\"$firstdt\"";
-						$linkRelations[] = "<$lasturi>; rel=\"last memento\"; datetime=\"$lastdt\"";
-						$linkRelations[] = "<$prevuri>; rel=\"prev\"";
-						$linkRelations[] = "<$nexturi>; rel=\"next\"";
 
 						$mementoTimestamp = $thisRevision->getTimestamp();
 						$mementoDatetime = wfTimestamp( TS_RFC2822, $mementoTimestamp );
