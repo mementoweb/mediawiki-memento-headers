@@ -72,6 +72,14 @@ clean:
 	@echo "#########################"
 	@echo ""
 
+forcecs:
+	@echo ""
+	@echo "#########################"
+	@echo "Fixing easy issues for MediaWiki coding standards compliance"
+	@find MementoHeaders -type f -name '*.php' -exec python scripts/codeReview.py {} \;
+	@echo "#########################"
+	@echo ""
+
 # verify code against coding standards
 verify:
 	@echo ""

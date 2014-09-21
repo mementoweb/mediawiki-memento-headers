@@ -90,12 +90,12 @@ class MementoHeaders {
 						$apiRelation = "http://mementoweb.org/terms/api/mediawiki/";
 						$linkRelations[] = "<$apiURI>; rel=\"$apiRelation\"";
 
-						/* TODO: find a cleaner way, if possible, than 
+						/* TODO: find a cleaner way, if possible, than
 						 * concatenation to produce the TimeGate URI
 						 *
 						 * Concern: HTML Injection
 						 * @see http://www.owasp.org/index.php/HTML_Injection
-						 * 
+						 *
 						 * Analysis:
 						 * The input for $wgMementoTimeGateURLPrefix can come
 						 * from the LocalSettings.php file and the input for
@@ -106,7 +106,7 @@ class MementoHeaders {
 						 * to produce a malicious result.
 						 *
 						 * This result is also used as an entry to the Link
-						 * header and not as input to HTML, so there is no 
+						 * header and not as input to HTML, so there is no
 						 * possibility of HTML injection.  The worst-case
 						 * scenario is that the admin injects a bad URI
 						 * into the LocalSettings.php file for a Memento client
@@ -128,60 +128,60 @@ class MementoHeaders {
 
 						$thisRevision = $article->getRevisionFetched();
 
-						/* 
+						/*
 						 * I'm not sure when this would occur, seeing as
 						 * we're wrapped in several if statements to
-						 * prevent a bad title object from being loaded, 
+						 * prevent a bad title object from being loaded,
 						 * but just in case...
 						 */
 						if ( $thisRevision != null ) {
 
 							$firstRevision = $title->getFirstRevision();
 							$lastRevision = Revision::newFromTitle( $title );
-	
-							/* 
+
+							/*
 							 * I'm not sure when this would occur, seeing as
 							 * we're wrapped in several if statements to
-							 * prevent a bad title object from being loaded, 
+							 * prevent a bad title object from being loaded,
 							 * but just in case...
 							 */
 							if ( $firstRevision != null ) {
 								$firstID = $firstRevision->getID();
-								
+
 								/* don't bother making headers if firstID is null;
 								 * something is wrong in that case, but we didn't cause it
 								 * so no need to put our extension's name on the error page
 								 */
 								if ( $firstID != null ) {
 									$firstdt = wfTimestamp( TS_RFC2822, $firstRevision->getTimestamp() );
-								
+
 									if ( $firstdt != false ) {
 										$firsturi = $title->getFullURL( array( "oldid" => $firstID ) );
 										$linkRelations[] = "<$firsturi>; rel=\"first memento\"; datetime=\"$firstdt\"";
 									}
 								}
 							}
-	
+
 							if ( $lastRevision != null ) {
 								$lastID = $lastRevision->getID();
-							
+
 								/* don't bother making headers if lastID is null
 								 * something is wrong in that case, but we didn't cause it
 								 * so no need to put our extension's name on the error page
 								*/
 								if ( $lastID != null ) {
 									$lastdt = wfTimestamp( TS_RFC2822, $lastRevision->getTimestamp() );
-							
+
 									if ( $lastdt != false ) {
 										$lasturi = $title->getFullURL( array( "oldid" => $lastID ) );
 										$linkRelations[] = "<$lasturi>; rel=\"last memento\"; datetime=\"$lastdt\"";
 			        				}
 							    }
 							}
-	
+
 							$prevRevID = $title->getPreviousRevisionID( $oldID );
 							$nextRevID = $title->getNextRevisionID( $oldID );
-	
+
 							/*
 							 * $prevRevID == null when we are on the first revision,
 							 * because there is no previous one
@@ -190,7 +190,7 @@ class MementoHeaders {
 								$prevuri = $title->getFullURL( array( "oldid" => $prevRevID ) );
 								$linkRelations[] = "<$prevuri>; rel=\"prev\"";
 							}
-	
+
 							/*
 							 * $nextRevID == null when we are on the last revision,
 							 * because there is no next one
@@ -199,7 +199,7 @@ class MementoHeaders {
 								$nexturi = $title->getFullURL( array( "oldid" => $nextRevID ) );
 								$linkRelations[] = "<$nexturi>; rel=\"next\"";
 							}
-	
+
 							$mementoTimestamp = $thisRevision->getTimestamp();
 							$mementoDatetime = wfTimestamp( TS_RFC2822, $mementoTimestamp );
 							$response->header( "Memento-Datetime:  $mementoDatetime", true );
