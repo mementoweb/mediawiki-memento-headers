@@ -175,8 +175,8 @@ class MementoHeaders {
 									if ( $lastdt != false ) {
 										$lasturi = $title->getFullURL( array( "oldid" => $lastID ) );
 										$linkRelations[] = "<$lasturi>; rel=\"last memento\"; datetime=\"$lastdt\"";
-			        				}
-							    }
+									}
+								}
 							}
 
 							$prevRevID = $title->getPreviousRevisionID( $oldID );
