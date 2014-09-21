@@ -145,7 +145,7 @@ class MementoHeaders {
 							 * prevent a bad title object from being loaded, 
 							 * but just in case...
 							 */
-							if ( $firstRevison != null ) {
+							if ( $firstRevision != null ) {
 								$firstID = $firstRevision->getID();
 								
 								/* don't bother making headers if firstID is null;
