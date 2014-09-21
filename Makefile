@@ -34,7 +34,7 @@ RM=rm
 CHMOD=chmod
 
 .PHONY: clean
-.PHONY: verify
+#.PHONY: verify
 
 # default target
 all: package
@@ -72,4 +72,11 @@ clean:
 	@echo "#########################"
 	@echo ""
 
-
+# verify code against coding standards
+verify:
+	@echo ""
+	@echo "#########################"
+	@echo "Verifying against Mediawiki coding standards"
+	phpcs --standard=externals/mediawiki-codesniffer/MediaWiki MementoHeaders
+	@echo "#########################"
+	@echo ""
