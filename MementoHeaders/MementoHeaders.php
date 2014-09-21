@@ -37,7 +37,7 @@ $wgExtensionCredits['other'][] = array(
 	'descriptionmsg' => 'mementoheaders-desc',
 	'url' => 'https://www.mediawiki.org/wiki/Extension:MementoHeaders',
 	'author' => '[http://www.mediawiki.org/wiki/User:Shawnmjones Shawn M. Jones]',
-	'version' => '0.1-SNAPSHOT'
+	'version' => '1.0.0'
 );
 
 // set up the messages file
