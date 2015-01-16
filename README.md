@@ -28,7 +28,7 @@ This extension has sensible defaults, but allows the following settings to be ad
 
 * $wgMementoIncludeNamespaces - is an array of Mediawiki Namespace IDs (e.g. the integer values for Talk, Template, etc.) to include for Mementofication, default is an array containing just 0 (Main); the list of Mediawiki Namespace IDs is at http://www.mediawiki.org/wiki/Manual:Namespace
 
-* $wgMementoTimeGateURLPrefix - the first part of the TimeGate URL, to which the extension will direct Memento users for datetime negotiation; the default is the Memento-supported TimeGate at http://mementoweb.org/proxy/mediawiki/timegate/
+* $wgMementoTimeGateURLPrefix - the first part of the TimeGate URL, to which the extension will direct Memento users for datetime negotiation; the default is the Memento-supported TimeGate at http://timetravel.mementoweb.org/mediawiki/timegate/
 
 # Packaging
 
