@@ -48,7 +48,7 @@ $wgExtensionMessagesFiles['MementoHeaders'] = __DIR__ . '/MementoHeaders.i18n.ph
 $wgAutoloadClasses['MementoHeaders'] = __DIR__ . '/MementoHeaders.body.php';
 
 // set default value for settings
-$wgMementoTimeGateURLPrefix = "http://mementoweb.org/proxy/mediawiki/timegate/";
+$wgMementoTimeGateURLPrefix = "http://timetravel.mementoweb.org/mediawiki/timegate/";
 $wgMementoIncludeNamespaces = array( 0 );
 
 // instantiate entry point
