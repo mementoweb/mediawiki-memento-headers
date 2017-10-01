@@ -207,7 +207,8 @@ class MementoHeaders {
 					}
 
 					$linkValue = implode( ', ', $linkRelations );
-					$response->header( "Link: $linkValue", true );
+					#$response->header( "Link: $linkValue", true );
+					$out->addLinkHeader( $linkValue );
 				}
 		}
 
