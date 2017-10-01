@@ -47,7 +47,7 @@ class MementoHeaders {
 	 *
 	 * @return boolean true
 	 */
-	public function onArticleViewHeader( &$article, &$outputDone, &$pcache ) {
+	public function onArticleViewHeader( $article, &$outputDone, &$pcache ) {
 
 		global $wgMementoTimeGateURLPrefix;
 		global $wgMementoIncludeNamespaces;
